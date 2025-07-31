@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <api context="/resources" name="SampleAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/create">
+        <inSequence>
+            <property expression="json-eval($.base)" name="base" scope="default" type="STRING"/>
+            <property expression="json-eval($.resourceType)" name="type" scope="default" type="STRING"/>
+            <property expression="json-eval($.format)" name="format" scope="default" type="STRING"/>
+            <log level="custom">
+                <property expression="get-property('transport','Content-Type')" name="base"/>
+            </log>
+            <fhirrepository.init>
+                <repositoryType>Other</repositoryType>
+                <base>http://hapi.fhir.org/baseR4</base>
+                <accessToken></accessToken>
+                <clientId></clientId>
+                <clientSecret></clientSecret>
+                <tokenEndpoint></tokenEndpoint>
+                <requireBulk>false</requireBulk>
+            </fhirrepository.init>
+
+            <switch source="get-property('transport','Content-Type')">
+                <case regex="application/json">
+                    <property name="format" scope="default" type="STRING" value="json"/>
+                    <fhirrepository.create>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.create>
+                </case>
+                <case regex="application/xml">
+                    <property name="format" scope="default" type="STRING" value="xml"/>
+                    <fhirrepository.create>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.create>
+                </case>
+                <default></default>
+            </switch>
+            <log level="full" separator=","/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+     <resource methods="POST" url-mapping="/read">
+        <inSequence>
+            <property expression="json-eval($.base)" name="base" scope="default" type="STRING"/>
+            <property expression="json-eval($.resourceType)" name="type" scope="default" type="STRING"/>
+            <property expression="json-eval($.format)" name="format" scope="default" type="STRING"/>
+<fhirrepository.init>
+                <repositoryType>Other</repositoryType>
+                <base>http://hapi.fhir.org/baseR4</base>
+                <accessToken></accessToken>
+                <clientId></clientId>
+                <clientSecret></clientSecret>
+                <tokenEndpoint></tokenEndpoint>
+                <requireBulk>false</requireBulk>
+            </fhirrepository.init>
+            <switch source="get-property('transport','Content-Type')">
+                <case regex="application/json">
+                    <property name="format" scope="default" type="STRING" value="json"/>
+                    <fhirrepository.readById>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.readById>
+                </case>
+                <case regex="application/xml">
+                    <property name="format" scope="default" type="STRING" value="xml"/>
+                    <fhirrepository.readById>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.readById>
+                </case>
+                <default></default>
+            </switch>
+            <log level="full" separator=","/>
+            <respond/>
+        </inSequence>
+    </resource>
+     <resource methods="POST" url-mapping="/readSpecificResourceById">
+        <inSequence>
+            <property expression="json-eval($.base)" name="base" scope="default" type="STRING"/>
+            <property expression="json-eval($.resourceType)" name="type" scope="default" type="STRING"/>
+            <property expression="json-eval($.format)" name="format" scope="default" type="STRING"/>
+            <property expression="json-eval($.id)" name="id" scope="default" type="STRING"/>
+            <property expression="json-eval($.summary)" name="summary" scope="default" type="STRING"/>
+<fhirrepository.init>
+                <repositoryType>Other</repositoryType>
+                <base>http://hapi.fhir.org/baseR4</base>
+                <accessToken></accessToken>
+                <clientId></clientId>
+                <clientSecret></clientSecret>
+                <tokenEndpoint></tokenEndpoint>
+                <requireBulk>false</requireBulk>
+            </fhirrepository.init>
+               <switch source="get-property('transport','Content-Type')">
+                <case regex="application/json">
+                    <property name="format" scope="default" type="STRING" value="json"/>
+                    <fhirrepository.readById>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <id>{$ctx:id}</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.readById>
+                </case>
+                <case regex="application/xml">
+                    <property name="format" scope="default" type="STRING" value="xml"/>
+                                        <fhirrepository.readById>
+                        <resourceType>{$ctx:type}</resourceType>
+                        <id>{$ctx:id}</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.readById>
+                </case>
+                <default></default>
+            </switch>
+            <log level="full" separator=","/>
+            <respond/>
+        </inSequence>
+    </resource>
+    <resource methods="POST" uri-template="/update">
+        <inSequence>
+            <property expression="json-eval($.base)" name="base" scope="default" type="STRING"/>
+            <property expression="json-eval($.resourceType)" name="type" scope="default" type="STRING"/>
+            <property expression="json-eval($.format)" name="format" scope="default" type="STRING"/>
+            <property expression="json-eval($.idToUpdate)" name="idToDelete" scope="default" type="STRING"/>
+<fhirrepository.init>
+                <repositoryType>Other</repositoryType>
+                <base>http://hapi.fhir.org/baseR4</base>
+                <accessToken></accessToken>
+                <clientId></clientId>
+                <clientSecret></clientSecret>
+                <tokenEndpoint></tokenEndpoint>
+                <requireBulk>false</requireBulk>
+            </fhirrepository.init>
+             <switch source="get-property('transport','Content-Type')">
+                <case regex="application/json">
+                    <property name="format" scope="default" type="STRING" value="json"/>
+                    <fhirrepository.update>
+                        <resourceType>'{$ctx:type}'</resourceType>
+                        <id>'{$ctx:idToUpdate}'</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.update>
+                </case>
+                <case regex="application/xml">
+                    <property name="format" scope="default" type="STRING" value="xml"/>
+                    <fhirrepository.update>
+                        <resourceType>'{$ctx:type}'</resourceType>
+                        <id>'{$ctx:idToUpdate}'</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.update>
+                </case>
+                <default></default>
+            </switch>
+            <log level="full" separator=","/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+    <resource methods="POST" uri-template="/delete">
+        <inSequence>
+            <property expression="json-eval($.base)" name="base" scope="default" type="STRING"/>
+            <property expression="json-eval($.resourceType)" name="type" scope="default" type="STRING"/>
+            <property expression="json-eval($.format)" name="format" scope="default" type="STRING"/>
+            <property expression="json-eval($.idToDelete)" name="idToDelete" scope="default" type="STRING"/>
+<fhirrepository.init>
+                <repositoryType>Other</repositoryType>
+                <base>http://hapi.fhir.org/baseR4</base>
+                <accessToken></accessToken>
+                <clientId></clientId>
+                <clientSecret></clientSecret>
+                <tokenEndpoint></tokenEndpoint>
+                <requireBulk>false</requireBulk>
+            </fhirrepository.init>
+             <switch source="get-property('transport','Content-Type')">
+                <case regex="application/json">
+                    <property name="format" scope="default" type="STRING" value="json"/>
+                    <fhirrepository.delete>
+                        <resourceType>'{$ctx:type}'</resourceType>
+                        <id>'{$ctx:idToDelete}'</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.delete>
+                </case>
+                <case regex="application/xml">
+                    <property name="format" scope="default" type="STRING" value="xml"/>
+                     <fhirrepository.delete>
+                        <resourceType>'{$ctx:type}'</resourceType>
+                        <id>'{$ctx:idToDelete}'</id>
+                        <urlRewrite>true</urlRewrite>
+                    </fhirrepository.delete>
+                </case>
+                <default></default>
+            </switch>
+            <log level="full" separator=","/>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+        </faultSequence>
+    </resource>
+</api>
